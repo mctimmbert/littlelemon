@@ -10,6 +10,7 @@ type Reservation = {
 };
 
 function Reservations() {
+  const today = new Date().toISOString().split("T")[0];
   const [date, setDate] = useState("");
   const [guests, setGuests] = useState("");
   const [time, setTime] = useState("");
@@ -60,6 +61,8 @@ function Reservations() {
                 name="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
+                required
+                min={today}
               />
             </div>
             <div className="form-field">
@@ -77,7 +80,8 @@ function Reservations() {
                   } else {
                     setError("");
                   }
-                }}>
+                }}
+                required>
                 <option value="">Select party size</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -91,7 +95,12 @@ function Reservations() {
             <div className="form-field">
               <label htmlFor="time">Time:</label>
 
-              <select id="time" name="time" value={time} onChange={(e) => setTime(e.target.value)}>
+              <select
+                id="time"
+                name="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                required>
                 <option value="">Select a time</option>
                 <option value="17:00">5:00 PM</option>
                 <option value="17:30">5:30 PM</option>
@@ -124,12 +133,18 @@ function Reservations() {
               onChange={(e) => setDiet(e.target.value)}
             />
           </div>
-          {error && <p className="form-error">{error}</p>}
+          {error && (
+            <p className="form-error" role="alert">
+              {error}
+            </p>
+          )}
           <Button type="submit">Submit</Button>
         </form>
         {reservation && (
           <div>
-            <p className="form-success">Reservation confirmed!</p>
+            <p className="form-success" role="status">
+              Reservation confirmed!
+            </p>
             <h2>Reservation Details</h2>
             <p>Date: {reservation.date}</p>
             <p>Guests: {reservation.guests}</p>

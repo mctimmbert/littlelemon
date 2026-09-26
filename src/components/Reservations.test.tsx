@@ -8,14 +8,12 @@ describe("Reservations", () => {
 
     expect(screen.getByRole("heading", { name: "Reserve a Table" })).toBeInTheDocument();
   });
-  it("shows an error when required fields are missing", () => {
+  it("marks required fields as required", () => {
     render(<Reservations />);
 
-    const submitButton = screen.getByRole("button", { name: "Submit" });
-
-    fireEvent.click(submitButton);
-
-    expect(screen.getByText("Please select a date, party size, and time.")).toBeInTheDocument();
+    expect(screen.getByLabelText("Date:")).toBeRequired();
+    expect(screen.getByLabelText("Party size:")).toBeRequired();
+    expect(screen.getByLabelText("Time:")).toBeRequired();
   });
   it("shows an error when the party size is 7 or more", () => {
     render(<Reservations />);
@@ -76,5 +74,72 @@ describe("Reservations", () => {
     expect(
       screen.queryByText("For parties of 7 or more, please contact the restaurant directly."),
     ).not.toBeInTheDocument();
+  });
+  it("announces a successful reservation", () => {
+    render(<Reservations />);
+
+    fireEvent.change(screen.getByLabelText("Date:"), {
+      target: { value: "2026-10-15" },
+    });
+
+    fireEvent.change(screen.getByLabelText("Party size:"), {
+      target: { value: "2" },
+    });
+
+    fireEvent.change(screen.getByLabelText("Time:"), {
+      target: { value: "18:00" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+
+    expect(screen.getByRole("status")).toHaveTextContent("Reservation confirmed!");
+  });
+  it("prevents selecting a date before today", () => {
+    render(<Reservations />);
+
+    const dateInput = screen.getByLabelText("Date:");
+
+    const today = new Date().toISOString().split("T")[0];
+
+    expect(dateInput).toHaveAttribute("min", today);
+  });
+  it("announces the party size error", () => {
+    render(<Reservations />);
+
+    fireEvent.change(screen.getByLabelText("Party size:"), {
+      target: { value: "7+" },
+    });
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "For parties of 7 or more, please contact the restaurant directly.",
+    );
+  });
+  it("includes optional reservation details", () => {
+    render(<Reservations />);
+
+    fireEvent.change(screen.getByLabelText("Date:"), {
+      target: { value: "2026-10-15" },
+    });
+
+    fireEvent.change(screen.getByLabelText("Party size:"), {
+      target: { value: "2" },
+    });
+
+    fireEvent.change(screen.getByLabelText("Time:"), {
+      target: { value: "18:00" },
+    });
+
+    fireEvent.change(screen.getByLabelText("Is this a special occasion?"), {
+      target: { value: "Birthday" },
+    });
+
+    fireEvent.change(screen.getByLabelText("Dietary Restrictions:"), {
+      target: { value: "Vegetarian" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+
+    expect(screen.getByText("Occasion: Birthday")).toBeInTheDocument();
+    expect(screen.getByText("Dietary restrictions: Vegetarian")).toBeInTheDocument();
   });
 });
