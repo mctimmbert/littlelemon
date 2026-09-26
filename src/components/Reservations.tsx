@@ -43,8 +43,6 @@ function Reservations() {
     };
 
     setReservation(newReservation);
-
-    console.log(newReservation);
   }
 
   return (

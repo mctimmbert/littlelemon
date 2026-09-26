@@ -511,9 +511,9 @@ p {
   padding: var(--space-lg);
 }
 
-/* ----------------
+/* ---------------------
 --- [ RESERVATIONS ] --- 
------------------ */
+----------------------- */
 
 .reservations-wrapper {
   display: flex;
@@ -531,6 +531,8 @@ p {
 
 .res-pickers .form-field {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (max-width: 700px) {
@@ -553,7 +555,7 @@ form {
   flex-direction: column;
   justify-content: center;
   background-color: var(--white);
-  padding: var(--space-xl);
+  padding: var(--space-lg);
   border-radius: var(--radius-lg);
   box-shadow: 0 0 10px var(--primary-light);
 }
