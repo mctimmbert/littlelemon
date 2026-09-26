@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { fetchAPI, submitAPI } from "../api";
 import Button from "./Button";
 
 type Reservation = {
@@ -14,6 +15,7 @@ function Reservations() {
   const [date, setDate] = useState("");
   const [guests, setGuests] = useState("");
   const [time, setTime] = useState("");
+  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [occasion, setOccasion] = useState("");
   const [diet, setDiet] = useState("");
   const [error, setError] = useState("");
@@ -33,6 +35,14 @@ function Reservations() {
     }
 
     setError("");
+
+    const formData = new FormData(e.currentTarget);
+    const isSubmitted = submitAPI(formData);
+
+    if (!isSubmitted) {
+      setError("Sorry, we couldn't submit your reservation. Please try again.");
+      return;
+    }
 
     const newReservation: Reservation = {
       date,
@@ -58,7 +68,11 @@ function Reservations() {
                 id="date"
                 name="date"
                 value={date}
-                onChange={(e) => setDate(e.target.value)}
+                onChange={(e) => {
+                  const selectedDate = e.target.value;
+                  setDate(selectedDate);
+                  setAvailableTimes(fetchAPI(new Date(selectedDate)));
+                }}
                 required
                 min={today}
               />
@@ -100,13 +114,11 @@ function Reservations() {
                 onChange={(e) => setTime(e.target.value)}
                 required>
                 <option value="">Select a time</option>
-                <option value="17:00">5:00 PM</option>
-                <option value="17:30">5:30 PM</option>
-                <option value="18:00">6:00 PM</option>
-                <option value="18:30">6:30 PM</option>
-                <option value="19:00">7:00 PM</option>
-                <option value="19:30">7:30 PM</option>
-                <option value="20:00">8:00 PM</option>
+                {availableTimes.map((availableTime) => (
+                  <option key={availableTime} value={availableTime}>
+                    {availableTime}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

@@ -1,8 +1,21 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import Reservations from "./Reservations";
+import { submitAPI } from "../api";
+
+vi.mock("../api", async () => {
+  const actual = await vi.importActual<typeof import("../api")>("../api");
+
+  return {
+    ...actual,
+    submitAPI: vi.fn().mockReturnValue(true),
+  };
+});
 
 describe("Reservations", () => {
+  afterEach(() => {
+    vi.mocked(submitAPI).mockReturnValue(true);
+  });
   it("renders the reservation form", () => {
     render(<Reservations />);
 
@@ -38,7 +51,7 @@ describe("Reservations", () => {
     });
 
     fireEvent.change(screen.getByLabelText("Time:"), {
-      target: { value: "18:00" },
+      target: { value: "17:00" },
     });
 
     fireEvent.change(screen.getByLabelText("Is this a special occasion?"), {
@@ -54,7 +67,7 @@ describe("Reservations", () => {
     expect(screen.getByText("Reservation confirmed!")).toBeInTheDocument();
     expect(screen.getByText("Date: 2026-10-15")).toBeInTheDocument();
     expect(screen.getByText("Guests: 2")).toBeInTheDocument();
-    expect(screen.getByText("Time: 18:00")).toBeInTheDocument();
+    expect(screen.getByText("Time: 17:00")).toBeInTheDocument();
     expect(screen.getByText("Occasion: Birthday")).toBeInTheDocument();
     expect(screen.getByText("Dietary restrictions: Vegetarian")).toBeInTheDocument();
   });
@@ -87,7 +100,7 @@ describe("Reservations", () => {
     });
 
     fireEvent.change(screen.getByLabelText("Time:"), {
-      target: { value: "18:00" },
+      target: { value: "17:00" },
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Submit" }));
@@ -126,7 +139,7 @@ describe("Reservations", () => {
     });
 
     fireEvent.change(screen.getByLabelText("Time:"), {
-      target: { value: "18:00" },
+      target: { value: "17:00" },
     });
 
     fireEvent.change(screen.getByLabelText("Is this a special occasion?"), {
@@ -141,5 +154,28 @@ describe("Reservations", () => {
 
     expect(screen.getByText("Occasion: Birthday")).toBeInTheDocument();
     expect(screen.getByText("Dietary restrictions: Vegetarian")).toBeInTheDocument();
+  });
+  it("shows an error when the reservation submission fails", () => {
+    vi.mocked(submitAPI).mockReturnValue(false);
+
+    render(<Reservations />);
+
+    fireEvent.change(screen.getByLabelText("Date:"), {
+      target: { value: "2026-10-15" },
+    });
+
+    fireEvent.change(screen.getByLabelText("Party size:"), {
+      target: { value: "2" },
+    });
+
+    fireEvent.change(screen.getByLabelText("Time:"), {
+      target: { value: "17:00" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Sorry, we couldn't submit your reservation. Please try again.",
+    );
   });
 });

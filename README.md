@@ -8,7 +8,8 @@ A responsive restaurant reservation application built with React and TypeScript 
 - Date selection with past dates disabled
 - Party-size selection for 1 to 6 guests
 - Custom messaging for parties of 7 or more
-- Reservation time selection
+- Reservation time selection based on API availability
+- API-based reservation submission
 - Optional special-occasion and dietary-restriction fields
 - Reservation confirmation with submitted details
 - Form validation and meaningful error messages
