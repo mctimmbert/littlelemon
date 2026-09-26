@@ -1,75 +1,77 @@
-# React + TypeScript + Vite
+# Little Lemon Restaurant Reservation App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive restaurant reservation application built with React and TypeScript as part of the Meta Front-End Developer Capstone Project.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Responsive reservation form
+- Date selection with past dates disabled
+- Party-size selection for 1 to 6 guests
+- Custom messaging for parties of 7 or more
+- Reservation time selection
+- Optional special-occasion and dietary-restriction fields
+- Reservation confirmation with submitted details
+- Form validation and meaningful error messages
+- Keyboard-accessible form controls
+- Accessible error and success announcements
 
-## React Compiler
+## Technologies
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- TypeScript
+- Vite
+- CSS
+- Vitest
+- React Testing Library
 
-## Expanding the ESLint configuration
+## Accessibility
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+The application uses semantic HTML elements, associated form labels, required form controls, visible keyboard focus states, and ARIA live-region roles for dynamic error and success messages.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Testing
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+The reservation form includes unit tests covering:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Form rendering
+- Required fields
+- Party-size validation
+- Successful reservations
+- Error clearing
+- Reservation confirmation
+- Date restrictions
+- Accessible error announcements
+- Optional reservation details
 
+Run the tests with:
+
+```bash
+npm test
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Running Locally
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Clone the repository and install the dependencies:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone https://github.com/mctimmbert/littlelemon.git
+cd littlelemon
+npm install
+```
 
+Start the development server:
+
+```bash
+npm run dev
+```
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+To preview the production build locally:
+
+```bash
+npm run preview
 ```
